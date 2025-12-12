@@ -1,0 +1,19 @@
+{
+	"name": "aimfornan/nan-auth",
+	"autoload": {
+		"psr-4": {
+			"NaN\\": "src/"
+		}
+	},
+	"config": {
+		"allow-plugins": {
+			"pestphp/pest-plugin": true
+		}
+	},
+	"require": {
+		"psr/http-message": "^2.0"
+	},
+	"require-dev": {
+		"pestphp/pest": "^4.1"
+	}
+}
