@@ -1,5 +1,7 @@
 {
 	"name": "aimfornan/nan-auth",
+	"description": "NaN\\Authentication",
+	"license": "MIT",
 	"autoload": {
 		"psr-4": {
 			"NaN\\": "src/"
@@ -15,5 +17,8 @@
 	},
 	"require-dev": {
 		"pestphp/pest": "^4.1"
+	},
+	"scripts": {
+		"test": "pest"
 	}
 }
