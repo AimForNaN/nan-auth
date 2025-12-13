@@ -3,40 +3,40 @@
 namespace NaN\Authentication;
 
 use NaN\Authentication\{
-	Session\Interfaces\SessionInterface,
 	Session\Managers\Interfaces\SessionManagerInterface,
 	Session\Managers\DatabaseSessionManager,
-	User\Interfaces\UserInterface,
+	User\Managers\DatabaseUserManager,
 	User\Managers\Interfaces\UserManagerInterface,
 };
 use Psr\Http\Message\ServerRequestInterface as PsrServerRequestInterface;
 
 class Authenticator {
-	protected ?SessionInterface $session = null;
-
 	public function __construct(
-		?PsrServerRequestInterface $request = null,
-		protected UserManagerInterface $user_manager,
+		protected UserManagerInterface $user_manager = new  DatabaseUserManager(),
 		protected SessionManagerInterface $session_manager = new DatabaseSessionManager(),
 	) {
-		$this->session = $this->session_manager->fromClient($request);
 	}
 
-	public function login(UserInterface $user): void {
-		$this->session = $this->session_manager->fromUser($user);
+	public function login(PsrServerRequestInterface $request): mixed {
+		$user = $this->user_manager->fromClient($request);
+		return $this->session_manager->createSession($user);
 	}
 
-	public function logout(): bool {
-		if ($this->session) {
-			return $this->session_manager->destroySession($this->session);
-		}
-
-		return true;
+	public function loginUser(mixed $user): mixed {
+		return $this->session_manager->createSession($user);
 	}
 
-	public function withSession($session): Authenticator {
-		$new = clone $this;
-		$new->session = $session;
-		return $new;
+	public function logout(PsrServerRequestInterface $request): bool {
+		$session = $this->session_manager->fromClient($request);
+		return $this->session_manager->destroySession($session);
+	}
+
+	public function logoutUser(mixed $user): bool {
+		$session = $this->session_manager->fromUser($user);
+		return $this->session_manager->destroySession($session);
+	}
+
+	public function register(PsrServerRequestInterface $request): mixed {
+		return $this->user_manager->register($request);
 	}
 }

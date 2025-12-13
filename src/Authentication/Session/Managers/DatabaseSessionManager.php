@@ -9,6 +9,8 @@ use Psr\Http\Message\ServerRequestInterface as PsrServerRequestInterface;
 
 class DatabaseSessionManager implements Interfaces\SessionManagerInterface {
 	public function destroySession(mixed $session): bool {
+		if ($session) {}
+
 		return false;
 	}
 
