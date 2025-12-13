@@ -15,7 +15,7 @@ class Authenticator {
 	protected ?SessionInterface $session = null;
 
 	public function __construct(
-		PsrServerRequestInterface $request,
+		?PsrServerRequestInterface $request = null,
 		protected UserManagerInterface $user_manager,
 		protected SessionManagerInterface $session_manager = new DatabaseSessionManager(),
 	) {
@@ -32,5 +32,11 @@ class Authenticator {
 		}
 
 		return true;
+	}
+
+	public function withSession($session): Authenticator {
+		$new = clone $this;
+		$new->session = $session;
+		return $new;
 	}
 }

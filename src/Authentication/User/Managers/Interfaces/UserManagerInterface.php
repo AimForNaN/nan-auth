@@ -2,10 +2,6 @@
 
 namespace NaN\Authentication\User\Managers\Interfaces;
 
-use NaN\Authentication\{
-	Session\Interfaces\SessionInterface,
-	User\Interfaces\UserInterface,
-};
 use Psr\Http\Message\ServerRequestInterface as PsrServerRequestInterface;
 
 interface UserManagerInterface {
@@ -14,16 +10,16 @@ interface UserManagerInterface {
 	 *
 	 * @param PsrServerRequestInterface $request
 	 *
-	 * @return UserInterface|null
+	 * @return mixed
 	 */
-	public function fromClient(PsrServerRequestInterface $request): ?UserInterface;
+	public function fromClient(PsrServerRequestInterface $request): mixed;
 
 	/**
 	 * Used to pull user from existing session.
 	 *
-	 * @param SessionInterface $session
+	 * @param mixed $session
 	 *
-	 * @return UserInterface|null
+	 * @return mixed
 	 */
-	public function fromSession(SessionInterface $session): ?UserInterface;
+	public function fromSession(mixed $session): mixed;
 }
