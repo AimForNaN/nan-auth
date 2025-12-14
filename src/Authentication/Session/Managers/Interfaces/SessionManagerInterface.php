@@ -6,7 +6,7 @@ use Psr\Http\Message\ServerRequestInterface as PsrServerRequestInterface;
 
 interface SessionManagerInterface {
 	/**
-	 * Used to create a valid session for user.
+	 * Create a valid session for user.
 	 *
 	 * @param mixed $user
 	 *
@@ -15,7 +15,7 @@ interface SessionManagerInterface {
 	public function createSession(mixed $user): mixed;
 
 	/**
-	 * Used to invalidate a session.
+	 * Delete (invalidate) a session.
 	 *
 	 * @param mixed $session
 	 *
@@ -24,7 +24,7 @@ interface SessionManagerInterface {
 	public function destroySession(mixed $session): bool;
 
 	/**
-	 * Used to get session from client cookie data.
+	 * Retrieve session matching client cookie data.
 	 *
 	 * @param PsrServerRequestInterface $request
 	 *
@@ -33,7 +33,7 @@ interface SessionManagerInterface {
 	public function fromClient(PsrServerRequestInterface $request): mixed;
 
 	/**
-	 * Used to get an active session from a user object.
+	 * Retrieve latest active session from user.
 	 *
 	 * @param mixed $user
 	 *

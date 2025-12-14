@@ -8,6 +8,10 @@ use NaN\Authentication\{
 use Psr\Http\Message\ServerRequestInterface as PsrServerRequestInterface;
 
 class DatabaseSessionManager implements Interfaces\SessionManagerInterface {
+	public function createSession(mixed $user): mixed {
+		return null;
+	}
+
 	public function destroySession(mixed $session): bool {
 		if ($session) {}
 

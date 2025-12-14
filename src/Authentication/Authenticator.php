@@ -12,7 +12,7 @@ use Psr\Http\Message\ServerRequestInterface as PsrServerRequestInterface;
 
 class Authenticator {
 	public function __construct(
-		protected UserManagerInterface $user_manager = new  DatabaseUserManager(),
+		protected UserManagerInterface $user_manager = new DatabaseUserManager(),
 		protected SessionManagerInterface $session_manager = new DatabaseSessionManager(),
 	) {
 	}
@@ -38,5 +38,9 @@ class Authenticator {
 
 	public function register(PsrServerRequestInterface $request): mixed {
 		return $this->user_manager->register($request);
+	}
+
+	public function validate(PsrServerRequestInterface $request): bool {
+		return $this->user_manager->validate($request);
 	}
 }

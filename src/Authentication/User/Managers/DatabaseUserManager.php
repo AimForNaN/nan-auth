@@ -16,11 +16,11 @@ class DatabaseUserManager implements Interfaces\UserManagerInterface {
 		return false;
 	}
 
-	public function validate(mixed $user): bool {
-		return false;
-	}
-
 	public function register(PsrServerRequestInterface $request): mixed {
 		return null;
+	}
+
+	public function validate(PsrServerRequestInterface $request): bool {
+		return false;
 	}
 }

@@ -6,7 +6,7 @@ use Psr\Http\Message\ServerRequestInterface as PsrServerRequestInterface;
 
 interface UserManagerInterface {
 	/**
-	 * Used to pull user from client request (e.g. POST from login form).
+	 * Retrieve user from client request (e.g. POST from login form).
 	 *
 	 * @param PsrServerRequestInterface $request
 	 *
@@ -15,7 +15,7 @@ interface UserManagerInterface {
 	public function fromClient(PsrServerRequestInterface $request): mixed;
 
 	/**
-	 * Used to pull user from existing session.
+	 * Retrieve user from existing session.
 	 *
 	 * @param mixed $session
 	 *
@@ -24,7 +24,7 @@ interface UserManagerInterface {
 	public function fromSession(mixed $session): mixed;
 
 	/**
-	 * Used to check if user has been validated.
+	 * Check if user has been validated.
 	 *
 	 * @param mixed $user
 	 *
@@ -33,7 +33,7 @@ interface UserManagerInterface {
 	public function isValid(mixed $user): bool;
 
 	/**
-	 * Used to register a user from a client request (e.g. POST from register form).
+	 * Create user from a client request (e.g. POST from register form).
 	 *
 	 * @param PsrServerRequestInterface $request
 	 *
@@ -44,9 +44,9 @@ interface UserManagerInterface {
 	/**
 	 * Used to validate the user.
 	 *
-	 * @param mixed $user
+	 * @param PsrServerRequestInterface $request
 	 *
 	 * @return bool Whether it succeeded.
 	 */
-	public function validate(mixed $user): bool;
+	public function validate(PsrServerRequestInterface $request): bool;
 }
