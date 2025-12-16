@@ -40,4 +40,13 @@ interface SessionManagerInterface {
 	 * @return mixed A valid session object or null on failure.
 	 */
 	public function fromUser(mixed $user): mixed;
+
+	/**
+	 * Check if session has expired.
+	 *
+	 * @param mixed $session
+	 *
+	 * @return bool
+	 */
+	public function isValid(mixed $session): bool;
 }

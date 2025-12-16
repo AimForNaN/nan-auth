@@ -2,9 +2,11 @@
 
 namespace NaN\Authentication\Session\Managers;
 
-use NaN\Authentication\Session\DatabaseSession;
-use NaN\Authentication\Tokenizer\Interfaces\TokenizerInterface;
-use NaN\Authentication\User\DatabaseUser;
+use NaN\Authentication\{
+	Session\DatabaseSession,
+	Tokenizers\Interfaces\TokenizerInterface,
+	User\DatabaseUser,
+};
 use NaN\Database\Drivers\Interfaces\DriverInterface;
 use Psr\Http\Message\ServerRequestInterface as PsrServerRequestInterface;
 
@@ -39,5 +41,11 @@ class DatabaseSessionManager implements Interfaces\SessionManagerInterface {
 		$this->assertUser($user);
 
 		return null;
+	}
+
+	public function isValid(mixed $session): bool {
+		$this->assertSession($session);
+
+		return false;
 	}
 }
