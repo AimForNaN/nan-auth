@@ -8,11 +8,12 @@ interface SessionManagerInterface {
 	/**
 	 * Create a valid session for user.
 	 *
+	 * @param PsrServerRequestInterface $request
 	 * @param mixed $user
 	 *
 	 * @return mixed A valid session object or null on failure.
 	 */
-	public function createSession(mixed $user): mixed;
+	public function createSession(PsrServerRequestInterface $request, mixed $user): mixed;
 
 	/**
 	 * Delete (invalidate) a session.

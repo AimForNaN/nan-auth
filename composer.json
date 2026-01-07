@@ -20,11 +20,12 @@
 	],
 	"require": {
 		"ext-gmp": "*",
-		"php": "^8.1",
+		"php": "^8.4",
 		"aimfornan/nan-db": "dev-main",
 		"psr/http-message": "^2.0",
 		"paragonie/paseto": "^3.5.0",
-		"firebase/php-jwt": "^7.0"
+		"firebase/php-jwt": "^7.0",
+		"nesbot/carbon": "^3.11"
 	},
 	"require-dev": {
 		"pestphp/pest": "^4.1"
