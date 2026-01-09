@@ -12,7 +12,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/AimForNaN/nan-db.git",
-                "reference": "9e30f349e95f9f15c609e61fc5439cfe974322b2"
+                "reference": "c927aaaac2ce87e0a7905b99135af01ac8881d4e"
             },
             "require": {
                 "ext-pdo": "*",
@@ -38,7 +38,7 @@
                 "MIT"
             ],
             "description": "NaN\\Database",
-            "time": "2026-01-06T17:10:19+00:00"
+            "time": "2026-01-07T07:39:22+00:00"
         },
         {
             "name": "carbonphp/carbon-doctrine-types",

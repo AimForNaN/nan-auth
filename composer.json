@@ -20,6 +20,7 @@
 	],
 	"require": {
 		"ext-gmp": "*",
+		"ext-pdo": "*",
 		"php": "^8.4",
 		"aimfornan/nan-db": "dev-main",
 		"psr/http-message": "^2.0",
