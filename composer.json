@@ -26,7 +26,8 @@
 		"psr/http-message": "^2.0",
 		"paragonie/paseto": "^3.5.0",
 		"firebase/php-jwt": "^7.0",
-		"nesbot/carbon": "^3.11"
+		"nesbot/carbon": "^3.11",
+		"aimfornan/nan-collections": "dev-main"
 	},
 	"require-dev": {
 		"pestphp/pest": "^4.1"
