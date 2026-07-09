@@ -1,13 +1,13 @@
 <?php
 
-namespace NaN\Authentication\Tokenizers;
+namespace NaN\Authentication\Codecs;
 
-use NaN\Authentication\Tokenizers\Interfaces\TokenizerInterface;
+use NaN\Authentication\Codecs\Interfaces\CodecInterface;
 use ParagonIE\Paseto\Exception\PasetoException;
 use ParagonIE\Paseto\Keys\Base\SymmetricKey;
 use ParagonIE\Paseto\Protocol\Version4;
 
-class SymmetricPasetoTokenizer implements TokenizerInterface {
+class SymmetricPasetoTokenizer implements CodecInterface {
 	public function __construct(
 		protected readonly string $shared_key,
 	) {
