@@ -1,8 +1,8 @@
 <?php
 
-namespace NaN\Authentication\Tokenizers\Interfaces;
+namespace NaN\Authentication\Codecs\Interfaces;
 
-interface TokenizerInterface {
+interface CodecInterface {
 	public function decode(string $data): mixed;
 	public function encode(mixed $data): string;
 }

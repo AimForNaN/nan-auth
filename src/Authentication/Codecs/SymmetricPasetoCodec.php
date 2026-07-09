@@ -7,7 +7,7 @@ use ParagonIE\Paseto\Exception\PasetoException;
 use ParagonIE\Paseto\Keys\Base\SymmetricKey;
 use ParagonIE\Paseto\Protocol\Version4;
 
-class SymmetricPasetoTokenizer implements CodecInterface {
+class SymmetricPasetoCodec implements CodecInterface {
 	public function __construct(
 		protected readonly string $shared_key,
 	) {
