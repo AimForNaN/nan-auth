@@ -13,6 +13,8 @@ interface CredentialInterface extends EntityInterface, IdentityRefInterface {
 
 	public string $value { get; }
 
+	public static function fromArray(array $array): CredentialInterface;
+
 	public function withType(CredentialType $type): CredentialInterface;
 
 	public function withValue(string $value): CredentialInterface;

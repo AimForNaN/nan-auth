@@ -2,7 +2,10 @@
 
 namespace NaN\Authentication\Factors;
 
-use NaN\Authentication\Credentials\Interfaces\CredentialInterface;
+use NaN\Authentication\Credentials\{
+	Credential,
+	Interfaces\CredentialInterface,
+};
 use NaN\Authentication\CredentialType;
 use NaN\Authentication\Hashers\Interfaces\HasherInterface;
 use NaN\Authentication\Stores\Interfaces\StoreInterface;
@@ -23,12 +26,10 @@ readonly class PasswordFactor implements Interfaces\FactorInterface {
 	}
 
 	public function validateCredential(CredentialInterface $credential): bool {
-		$credential = $credential->withValue($this->__hasher->hash($credential->value));
-		$credentials_from_store = $this->__credential_store->get($credential);
+		$credential_with_hash = $credential->withValue($this->__hasher->hash($credential->value));
+		$credential_from_store = $this->__credential_store->pull((array)$credential_with_hash);
 
-		if (!empty($credentials_from_store)) {
-			// Assumes only one matching result!
-			[$credential_from_store] = $credentials_from_store;
+		if ($credential_from_store instanceof Credential) {
 			return $this->__hasher->verify($credential->value, $credential_from_store->value);
 		}
 

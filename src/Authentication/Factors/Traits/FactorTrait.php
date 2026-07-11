@@ -26,29 +26,34 @@ trait FactorTrait {
 	}
 
 	public function validateRequest(PsrServerRequestInterface $request): ?IdentityInterface {
-		/** @var array|null $result */
+		/** @var array $result */
 		$result = $this->__request_validator->validateRequest($request);
+		/** @var IdentifierInterface|null $identifier */
+		$identifier = \array_find($result, fn($x) => $x instanceof IdentifierInterface);
+		/** @var CredentialInterface|null $credential */
+		$credential = \array_find($result, fn($x) => $x instanceof CredentialInterface);
 
-		if (\is_array($result)) {
-			/** @var IdentifierInterface|null $identifier */
-			$identifier = \array_find($result, fn($x) => $x instanceof IdentifierInterface);
-			/** @var CredentialInterface|null $credential */
-			$credential = \array_find($result, fn($x) => $x instanceof CredentialInterface);
+		if ($identifier instanceof IdentifierInterface) {
+			/**
+			 * Identifiers are unique to identities, therefore it is safe
+			 *   to pull using only the identifier that we might
+			 *   obtain the identity!
+			 */
+			$identifier = $this->__identifier_store->pull([
+				'value' => $identifier->value,
+			]);
 
-			if ($identifier instanceof IdentifierInterface) {
-				// Identifiers are unique to identities; use identifier to get identity!
-				$identifier = $this->__identifier_store->get($identifier);
+			if (
+				$identifier instanceof IdentifierInterface &&
+				$credential instanceof CredentialInterface
+			) {
+				/** @var CredentialInterface $credential */
+				$credential = $credential->withIdentity($identifier->identity);
 
-				if (
-					$identifier instanceof IdentifierInterface &&
-					$credential instanceof CredentialInterface
-				) {
-					/** @var CredentialInterface $credential */
-					$credential = $credential->withIdentity($identifier->identity);
-
-					if ($this->validateCredential($credential)) {
-						return $this->__identity_store->get($identifier->identity);
-					}
+				if ($this->validateCredential($credential)) {
+					return $this->__identity_store->pull([
+						'id' => $identifier->identity,
+					]);
 				}
 			}
 		}
