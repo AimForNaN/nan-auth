@@ -3,6 +3,6 @@
 namespace NaN\Authentication\Codecs\Interfaces;
 
 interface CodecInterface {
-	public function decode(string $data): mixed;
-	public function encode(mixed $data): string;
+	public function decode(string $data): string;
+	public function encode(string $data): string;
 }

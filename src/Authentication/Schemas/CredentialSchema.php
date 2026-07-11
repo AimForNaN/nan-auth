@@ -23,9 +23,9 @@ readonly class CredentialSchema implements Schema {
 	}
 
 	function complete(mixed $value, Context $context) {
-		return new $this->__class()
-			->withType($this->__type)
-			->withValue($value)
-		;
+		return $this->__class::fromArray([
+			'type' => $this->__type,
+			'value' => $value,
+		]);
 	}
 }

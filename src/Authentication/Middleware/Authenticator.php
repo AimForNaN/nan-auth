@@ -26,7 +26,7 @@ readonly class Authenticator implements PsrMiddlewareInterface {
 	public function __construct(
 		private FactorInterface $__factor,
 		private StoreInterface $__session_store,
-		private CodecInterface $__tokenizer,
+		private CodecInterface $__codec,
 		private string $__cookie_name = 'session_token',
 		?\DateTimeInterface $cookie_expiration  = null,
 	) {
@@ -47,13 +47,18 @@ readonly class Authenticator implements PsrMiddlewareInterface {
 		$identity = $this->__factor->validateRequest($request);
 
 		if ($identity instanceof IdentityInterface) {
+			// @todo Replace with abstract interface implementation!
 			$token = \bin2hex(\random_bytes(64));
 
-			$this->__session_store->set($identity->id, $token);
+			$this->__session_store->push([
+				'expires' => $this->__cookie_expiration->format(\DateTimeInterface::ATOM),
+				'identity' => $identity->id,
+				'token' => $token,
+			]);
 
-			$token = $this->__tokenizer->encode($token);
+			$token = $this->__codec->encode($token);
 
-			// @todo Maybe manually set response set-cookie headers.
+			// @todo Maybe manually set response set-cookie headers!
 			setcookie(
 				$this->__cookie_name,
 				$token,

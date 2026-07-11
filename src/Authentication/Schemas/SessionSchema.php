@@ -2,7 +2,7 @@
 
 namespace NaN\Authentication\Schemas;
 
-use NaN\Authentication\Interfaces\SessionInterface;
+use NaN\Authentication\Sessions\Interfaces\SessionInterface;
 use Nette\Schema\{
 	Context,
 	Expect,
@@ -21,8 +21,8 @@ readonly class SessionSchema implements Schema {
 	}
 
 	public function complete(mixed $value, Context $context) {
-		return new $this->__class()
-			->withToken($value)
-		;
+		return $this->__class::fromArray([
+			'token' => $value,
+		]);
 	}
 }

@@ -3,7 +3,6 @@
 namespace NaN\Authentication\Schemas\Traits;
 
 use Nette\Schema\{Context, Schema};
-use NaN\Authentication\Interfaces\SessionInterface;
 
 /**
  * @property string $__type

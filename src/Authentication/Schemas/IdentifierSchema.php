@@ -2,7 +2,6 @@
 
 namespace NaN\Authentication\Schemas;
 
-use NaN\Authentication\Identifiers\Identifier;
 use NaN\Authentication\Identifiers\Interfaces\IdentifierInterface;
 use NaN\Authentication\IdentifierType;
 use Nette\Schema\{
@@ -30,9 +29,9 @@ readonly class IdentifierSchema implements Schema {
 	}
 
 	public function complete(mixed $value, Context $context) {
-		return new $this->__class()
-			->withType($this->__type)
-			->withValue($value)
-		;
+		return $this->__class::fromArray([
+			'type' => $this->__type,
+			'value' => $value,
+		]);
 	}
 }

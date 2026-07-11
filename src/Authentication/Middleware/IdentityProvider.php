@@ -2,17 +2,17 @@
 
 namespace NaN\Authentication\Middleware;
 
-use NaN\Authentication\Identities\Interfaces\{
-	IdentityInterface,};
 use NaN\Authentication\Codecs\Interfaces\CodecInterface;
-use NaN\Authentication\Interfaces\SessionInterface;
+use NaN\Authentication\Identities\Interfaces\IdentityInterface;
+use NaN\Authentication\Sessions\Interfaces\SessionInterface;
 use NaN\Authentication\Stores\Interfaces\StoreInterface;
 use NaN\Http\RequestValidators\Interfaces\RequestValidatorInterface;
 use Psr\Http\{
 	Message\ResponseInterface as PsrResponseInterface,
 	Message\ServerRequestInterface as PsrServerRequestInterface,
 	Server\MiddlewareInterface as PsrMiddlewareInterface,
-	Server\RequestHandlerInterface as PsrRequestHandlerInterface,};
+	Server\RequestHandlerInterface as PsrRequestHandlerInterface,
+};
 
 readonly class IdentityProvider implements PsrMiddlewareInterface {
 	public function __construct(
@@ -31,11 +31,21 @@ readonly class IdentityProvider implements PsrMiddlewareInterface {
 		if ($data = $this->__request_validator->validateRequest($request)) {
 			/** @var SessionInterface|null $session_cookie */
 			$session_cookie = \array_find($data, fn($x) => $x instanceof SessionInterface);
-			$token = $session_cookie->withToken($this->__codec->decode($session_cookie->token));
+
+			assert($session_cookie instanceof SessionInterface);
+
+			$decoded_token = $this->__codec->decode($session_cookie->token);
 			/** @var SessionInterface|null $session */
-			$session = $this->__session_store->get($token->token);
+			$session = $this->__session_store->pull([
+				'token' => $decoded_token,
+			]);
+
+			assert($session instanceof SessionInterface);
+
 			/** @var IdentityInterface|null $user */
-			$user = $this->__identity_store->get($session->identity);
+			$user = $this->__identity_store->pull([
+				'id' => $session->identity,
+			]);
 
 			if ($user instanceof IdentityInterface) {
 				$request = $request->withAttribute(IdentityInterface::class, $user);
