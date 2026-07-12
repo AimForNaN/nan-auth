@@ -8,7 +8,7 @@ use NaN\Authentication\Identities\Interfaces\IdentityInterface;
  * @implements IdentityInterface
  */
 trait IdentityTrait {
-	static function fromArray(array $arr): IdentityInterface {
+	static function fromArray(iterable $arr): IdentityInterface {
 		$new = new self();
 
 		foreach ($arr as $key => $value) {

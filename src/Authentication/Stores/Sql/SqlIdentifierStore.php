@@ -22,27 +22,16 @@ readonly class SqlIdentifierStore implements StoreInterface {
 	) {
 	}
 
-	public function patch(array $data): void {
-		$query = $this->__connection->queryBuilder();
-		/** @var UpdateStatement $update_statement */
-		$update_statement = $query->patch();
-		$identifier = $data['value'];
-
-		// Prevent overriding identifier!
-		unset($data['value']);
-
-		// @todo Create identifiers table class!
-		$update_statement
-			->update('identifiers')
-			->with($data)
-			->where(function (WhereClause $where) use ($identifier) {
-				$where->is('value', '=', $identifier);
-			})
-		;
-
-		$this->__connection->exec($update_statement);
+	/**
+	 * For now, I see no reason to allow patching identifiers.
+	 */
+	public function patch(array $data): bool {
+		return false;
 	}
 
+	/**
+	 * @param array $data Expects an array with `value` key as identifier.
+	 */
 	public function pull(array $data): ?IdentifierInterface {
 		$query = $this->__connection->queryBuilder();
 		/** @var SelectStatement $select_statement */
@@ -66,7 +55,10 @@ readonly class SqlIdentifierStore implements StoreInterface {
 		return null;
 	}
 
-	public function push(array $data): bool {
+	/**
+	 * @param array $data Expects an array with `type` as identifier type and `value` key as identifier.
+	 */
+	public function push(array $data): ?IdentifierInterface {
 		$query = $this->__connection->queryBuilder();
 		/** @var InsertStatement $insert_statement */
 		$insert_statement = $query->push();
@@ -77,10 +69,19 @@ readonly class SqlIdentifierStore implements StoreInterface {
 			->into('identifiers')
 		;
 
-		return (bool)$this->__connection->exec($insert_statement);
+		if ($this->__connection->exec($insert_statement)) {
+			return $this->pull([
+				'value' => $data['value'],
+			]);
+		}
+
+		return null;
 	}
 
-	public function purge(array $data): void {
+	/**
+	 * @param array $data Expects an array with `value` key as identifier.
+	 */
+	public function purge(array $data): bool {
 		$query = $this->__connection->queryBuilder();
 		/** @var DeleteStatement $delete_statement */
 		$delete_statement = $query->purge();
@@ -95,6 +96,6 @@ readonly class SqlIdentifierStore implements StoreInterface {
 			})
 		;
 
-		$this->__connection->exec($delete_statement);
+		return (bool)$this->__connection->exec($delete_statement);
 	}
 }

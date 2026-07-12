@@ -8,7 +8,7 @@ use Nette\Schema\{Context, Schema};
  * @property string $__type
  */
 trait SchemaTrait {
-	private Schema $__schema;
+	readonly private Schema $__schema;
 
 	public function complete(mixed $value, Context $context) {
 		return [

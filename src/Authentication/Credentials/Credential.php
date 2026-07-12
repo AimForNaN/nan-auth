@@ -2,11 +2,12 @@
 
 namespace NaN\Authentication\Credentials;
 
-use NaN\Authentication\Traits\EntityTrait;
+use NaN\Authentication\Credentials\Traits\CredentialTrait;
 use NaN\Authentication\Traits\IdentityRefTrait;
+use NaN\Database\Traits\EntityTrait;
 
 class Credential implements Interfaces\CredentialInterface {
-	use EntityTrait;
-	use IdentityRefTrait;
-	use Traits\CredentialTrait;
+	use CredentialTrait, EntityTrait, IdentityRefTrait {
+		EntityTrait::fromArray insteadof CredentialTrait;
+	}
 }

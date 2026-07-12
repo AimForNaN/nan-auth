@@ -19,7 +19,7 @@ trait IdentifierTrait {
 
 	private(set) mixed $value;
 
-	static function fromArray(array $arr): IdentifierInterface {
+	static function fromArray(iterable $arr): IdentifierInterface {
 		$new = new self();
 
 		foreach ($arr as $key => $value) {

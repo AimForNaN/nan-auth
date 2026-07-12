@@ -13,7 +13,7 @@ trait CredentialTrait {
 
 	private(set) string $value;
 
-	static function fromArray(array $arr): CredentialInterface {
+	static function fromArray(iterable $arr): CredentialInterface {
 		$new = new self();
 
 		foreach ($arr as $key => $value) {

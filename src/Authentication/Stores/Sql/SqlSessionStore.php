@@ -25,8 +25,10 @@ readonly class SqlSessionStore implements StoreInterface {
 
 	/**
 	 * @param array $data Expects an array with `expires`, `identity` and `token` keys.
+	 *
+	 * @return bool If the statement executed successfully.
 	 */
-	public function patch(array $data): void {
+	public function patch(array $data): bool {
 		$query = $this->__connection->queryBuilder();
 		/** @var UpdateStatement $update_statement */
 		$update_statement = $query->patch();
@@ -44,13 +46,11 @@ readonly class SqlSessionStore implements StoreInterface {
 			})
 		;
 
-		$this->__connection->exec($update_statement);
+		return (bool)$this->__connection->exec($update_statement);
 	}
 
 	/**
-	 * @param array $data Expects an array with `token` keys.
-	 *
-	 * @return SessionInterface|null
+	 * @param array $data Expects an array with `token` key.
 	 */
 	public function pull(array $data): ?SessionInterface {
 		$query = $this->__connection->queryBuilder();
@@ -79,10 +79,8 @@ readonly class SqlSessionStore implements StoreInterface {
 
 	/**
 	 * @param array $data Expects an array with `expires`, `identity` and `token` keys.
-	 *
-	 * @return bool If the statement executed successfully.
 	 */
-	public function push(array $data): bool {
+	public function push(array $data): ?SessionInterface {
 		$query = $this->__connection->queryBuilder();
 		/** @var InsertStatement $insert_statement */
 		$insert_statement = $query->push();
@@ -96,13 +94,21 @@ readonly class SqlSessionStore implements StoreInterface {
 			->into(SqlSessionTable::NAME)
 		;
 
-		return (bool)$this->__connection->exec($insert_statement);
+		if ($this->__connection->exec($insert_statement)) {
+			return $this->pull([
+				'token' => $data['token'],
+			]);
+		}
+
+		return null;
 	}
 
 	/**
 	 * @param array $data Expects an array with `identity` and `token` keys.
+	 *
+	 * @return bool If statement executed successfully.
 	 */
-	public function purge(array $data): void {
+	public function purge(array $data): bool {
 		$query = $this->__connection->queryBuilder();
 		/** @var DeleteStatement $delete_statement */
 		$delete_statement = $query->purge();
@@ -117,6 +123,6 @@ readonly class SqlSessionStore implements StoreInterface {
 			})
 		;
 
-		$this->__connection->exec($delete_statement);
+		return (bool)$this->__connection->exec($delete_statement);
 	}
 }

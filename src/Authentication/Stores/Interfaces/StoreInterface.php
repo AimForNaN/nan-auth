@@ -3,11 +3,11 @@
 namespace NaN\Authentication\Stores\Interfaces;
 
 interface StoreInterface {
-	public function patch(array $data): void;
+	public function patch(array $data): bool;
 
 	public function pull(array $data): mixed;
 
-	public function push(array $data): bool;
+	public function push(array $data): mixed;
 
-	public function purge(array $data): void;
+	public function purge(array $data): bool;
 }

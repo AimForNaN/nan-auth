@@ -5,22 +5,12 @@ namespace NaN\Authentication\Factors\Traits;
 use NaN\Authentication\Credentials\Interfaces\CredentialInterface;
 use NaN\Authentication\Identifiers\Interfaces\IdentifierInterface;
 use NaN\Authentication\Identities\Interfaces\IdentityInterface;
-use NaN\Authentication\Stores\Interfaces\StoreInterface;
-use NaN\Http\RequestValidators\Interfaces\RequestValidatorInterface;
 use Psr\Http\Message\ServerRequestInterface as PsrServerRequestInterface;
 
 /**
  * @const CredentialType CREDENTIAL_TYPE
  */
 trait FactorTrait {
-	public function __construct(
-		private RequestValidatorInterface $__request_validator,
-		private StoreInterface $__identity_store,
-		private StoreInterface $__identifier_store,
-		private StoreInterface $__credential_store,
-	) {
-	}
-
 	public function generateChallenge(): null {
 		return null;
 	}

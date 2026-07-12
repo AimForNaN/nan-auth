@@ -5,11 +5,12 @@ namespace NaN\Authentication\Identities\Sql;
 use NaN\Authentication\Identifiers;
 use NaN\Authentication\Identities\Traits\IdentityTrait;
 use NaN\Authentication\Identities\Interfaces\IdentityInterface;
-use NaN\Authentication\Traits\EntityTrait;
+use NaN\Database\Traits\EntityTrait;
 
 class SqlUser implements IdentityInterface {
-	use EntityTrait;
-	use IdentityTrait;
+	use EntityTrait, IdentityTrait {
+		EntityTrait::fromArray insteadof IdentityTrait;
+	}
 
 	public ?string $display_name;
 
