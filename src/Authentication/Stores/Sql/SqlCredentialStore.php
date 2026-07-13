@@ -2,8 +2,8 @@
 
 namespace NaN\Authentication\Stores\Sql;
 
+use NaN\Authentication\Credentials;
 use NaN\Authentication\Credentials\Credential;
-use NaN\Authentication\Credentials\Interfaces\CredentialInterface;
 use NaN\Authentication\Stores\Interfaces\StoreInterface;
 use NaN\Database\Sql\Query\Statements\Clauses\WhereClause;
 use NaN\Database\Sql\Query\Statements\InsertStatement;
@@ -27,7 +27,7 @@ readonly class SqlCredentialStore implements StoreInterface {
 		return false;
 	}
 
-	public function pull(array $data): ?CredentialInterface {
+	public function pull(array $data): Credentials {
 		$query = $this->__connection->queryBuilder();
 		/** @var SelectStatement $select_statement */
 		$select_statement = $query->pull();
@@ -39,23 +39,28 @@ readonly class SqlCredentialStore implements StoreInterface {
 				$where
 					->is('identity', '=', $data['identity'])
 					->and('type', '=', $data['type'])
-					->and('value', '=', $data['value'])
 				;
 			})
 		;
 
 		/** @var \PDOStatement|false $statement */
 		if ($statement = $this->__connection->exec($select_statement)) {
-			return $statement->fetchObject(Credential::class) ?: null;
+			$credentials = [];
+
+			while ($credential = $statement->fetchObject(Credential::class)) {
+				$credentials[] = $credential;
+			}
+
+			return new Credentials(...$credentials);
 		}
 
-		return null;
+		return new Credentials();
 	}
 
 	/**
 	 * @param array $data Expects an array with keys 'identity', 'type', and 'value'.
 	 */
-	public function push(array $data): ?CredentialInterface {
+	public function push(array $data): Credentials {
 		$query = $this->__connection->queryBuilder();
 		/** @var InsertStatement $insert_statement */
 		$insert_statement = $query->push();
@@ -69,7 +74,7 @@ readonly class SqlCredentialStore implements StoreInterface {
 			return $this->pull($data);
 		}
 
-		return null;
+		return new Credentials();
 	}
 
 	public function purge(array $data): bool {

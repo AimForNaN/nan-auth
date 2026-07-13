@@ -38,6 +38,7 @@
 		"pestphp/pest": "^4.1"
 	},
 	"scripts": {
+		"migrations": "php migrate",
 		"tests": "pest"
 	}
 }

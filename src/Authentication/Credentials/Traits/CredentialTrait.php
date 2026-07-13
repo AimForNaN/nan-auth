@@ -9,6 +9,8 @@ use NaN\Authentication\CredentialType;
  * @implements CredentialInterface
  */
 trait CredentialTrait {
+	private(set) ?string $expires = null;
+
 	private(set) string $type {
 		set(string $value) {
 			$this->type = CredentialType::from($value)->value;

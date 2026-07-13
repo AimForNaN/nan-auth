@@ -2,8 +2,10 @@
 
 namespace NaN\Authentication\Factors;
 
-use NaN\Authentication\Credentials\Credential;
-use NaN\Authentication\Credentials\Interfaces\CredentialInterface;
+use NaN\Authentication\Credentials\{
+	Credential,
+	Interfaces\CredentialInterface,
+};
 use NaN\Authentication\CredentialType;
 use NaN\Authentication\Hashers\Interfaces\HasherInterface;
 use NaN\Authentication\Identifiers\Interfaces\IdentifierInterface;
@@ -67,16 +69,17 @@ readonly class PasswordFactor implements Interfaces\FactorInterface {
 				/** @var CredentialInterface $credential */
 				$credential = $credential->withIdentity($identifier->identity);
 				$credential_with_hash = $credential->withValue($this->__hasher->hash($credential->value));
-				$credential_from_store = $this->__credential_store->pull($credential_with_hash->jsonSerialize());
+				$credentials_from_store = $this->__credential_store->pull($credential_with_hash->jsonSerialize());
 
-				if ($credential_from_store instanceof Credential) {
-					if ($this->__hasher->verify($credential->value, $credential_from_store->value)) {
-						return $this->__identity_store->pull([
-							'id' => $identifier->identity,
-						]);
+				if (\count($credentials_from_store)) {
+					foreach ($credentials_from_store as $credential_from_store) {
+						if ($this->__hasher->verify($credential->value, $credential_from_store->value)) {
+							return $this->__identity_store->pull([
+								'id' => $identifier->identity,
+							]);
+						}
 					}
 				}
-
 			}
 		}
 

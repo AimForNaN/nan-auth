@@ -60,8 +60,8 @@ readonly class SqlIdentityStore implements StoreInterface {
 			->where(function (WhereClause $where) use ($data) {
 				$where->is('id', '=', $data['id']);
 			})
+			->limit(1)
 		;
-		var_dump(new SqlQueryRenderer()->render($select_statement->toAst()));
 
 		if ($statement = $this->__connection->exec($select_statement)) {
 			return $statement->fetchObject(SqlUser::class) ?: null;

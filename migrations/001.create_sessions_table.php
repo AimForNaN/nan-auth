@@ -1,0 +1,23 @@
+<?php
+
+use Illuminate\Database\{
+	Capsule\Manager as Capsule,
+	Migrations\Migration,
+	Schema\Blueprint,
+};
+
+return new class extends Migration {
+	public function down(): void {
+		Capsule::schema()->dropIfExists('sessions');
+	}
+
+	public function up(): void {
+		Capsule::schema()->create('sessions', function (Blueprint $table) {
+			$table->dateTime('expires');
+			$table->string('identity');
+			$table->string('token')->primary();
+
+			$table->foreign('identity')->references('id')->on('users');
+		});
+	}
+};

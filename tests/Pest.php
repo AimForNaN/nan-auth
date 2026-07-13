@@ -29,14 +29,10 @@ pest()->beforeAll(function () {
 		return;
 	}
 
-	$db_path = ':memory:';//base_path('test.sqlite');
-	$pdo = \PDO::connect('sqlite:' . $db_path);
-	$pdo = null;
-
 	$capsule = new CapsuleManager();
 	$capsule->addConnection([
 		'driver' => 'sqlite',
-		'database' => $db_path,
+		'database' => ':memory:',
 	]);
 
 	$capsule->setAsGlobal();
@@ -54,6 +50,10 @@ pest()->beforeAll(function () {
 
 	if (!$migrator->repositoryExists()) {
 		$migrator->getRepository()->createRepository();
+	} else {
+		$migrated = true;
+
+		return;
 	}
 
 	$migrator->run(__DIR__ . '/../migrations');
@@ -73,6 +73,4 @@ pest()->beforeAll(function () {
 		'type' => IdentifierType::Email->value,
 		'value' => 'test@example.com',
 	]);
-
-	$migrated = true;
 });

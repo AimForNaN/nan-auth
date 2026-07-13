@@ -24,7 +24,7 @@ use Nette\Schema\Expect;
 use Psr\Http\Message\ServerRequestInterface;
 
 describe('Authenticator', function () {
-	it('Password middleware', function () {
+	test('Password middleware', function () {
 		$pdo = CapsuleManager::connection()->getPdo();
 		$connection = new SqlConnection($pdo);
 		$shared_key = \random_bytes(32);

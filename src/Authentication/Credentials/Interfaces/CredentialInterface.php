@@ -7,6 +7,8 @@ use NaN\Authentication\Interfaces\IdentityRefInterface;
 use NaN\Database\Interfaces\EntityInterface;
 
 interface CredentialInterface extends EntityInterface, IdentityRefInterface {
+	public ?string $expires { get; }
+
 	public string $type { get; }
 
 	public string $value { get; }
