@@ -39,7 +39,7 @@ readonly class SqlIdentifierStore implements StoreInterface {
 
 		// @todo Create identifiers table class!
 		$select_statement
-			->select()
+			->select(['*'])
 			->from('identifiers')
 			->where(function (WhereClause $where) use ($data) {
 				$where->is('value', '=', $data['value']);

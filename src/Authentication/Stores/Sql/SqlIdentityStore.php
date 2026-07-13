@@ -12,6 +12,7 @@ use NaN\Database\Sql\Query\Statements\{
 	SelectStatement,
 	UpdateStatement,
 };
+use NaN\Database\Sql\Query\Renderers\SqlQueryRenderer;
 use NaN\Database\Sql\SqlConnection;
 use Ramsey\Uuid\Uuid;
 
@@ -54,12 +55,13 @@ readonly class SqlIdentityStore implements StoreInterface {
 		$select_statement = $query->pull();
 
 		$select_statement
-			->select()
+			->select(['*'])
 			->from('users')
 			->where(function (WhereClause $where) use ($data) {
 				$where->is('id', '=', $data['id']);
 			})
 		;
+		var_dump(new SqlQueryRenderer()->render($select_statement->toAst()));
 
 		if ($statement = $this->__connection->exec($select_statement)) {
 			return $statement->fetchObject(SqlUser::class) ?: null;

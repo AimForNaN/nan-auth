@@ -2,14 +2,14 @@
 
 namespace NaN\Authentication\Factors\Interfaces;
 
-use NaN\Authentication\Credentials\Interfaces\CredentialInterface;
 use NaN\Authentication\Identities\Interfaces\IdentityInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\{
+	ResponseInterface as PsrResponseInterface,
+	ServerRequestInterface as PsrServerRequestInterface,
+};
 
 interface FactorInterface {
-	public function generateChallenge(): mixed;
+	public function generateChallenge(PsrServerRequestInterface $request): PsrResponseInterface;
 
-	public function validateRequest(ServerRequestInterface $request): ?IdentityInterface;
-
-	public function validateCredential(CredentialInterface $credential): bool;
+	public function validateChallenge(PsrServerRequestInterface $request): ?IdentityInterface;
 }

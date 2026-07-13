@@ -30,7 +30,7 @@ readonly class IdentifierSchema implements Schema {
 
 	public function complete(mixed $value, Context $context) {
 		return $this->__class::fromArray([
-			'type' => $this->__type,
+			'type' => $this->__type->value,
 			'value' => $value,
 		]);
 	}

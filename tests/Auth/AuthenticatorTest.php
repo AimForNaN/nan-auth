@@ -24,10 +24,10 @@ use Nette\Schema\Expect;
 use Psr\Http\Message\ServerRequestInterface;
 
 describe('Authenticator', function () {
-	it('Middleware', function () {
+	it('Password middleware', function () {
 		$pdo = CapsuleManager::connection()->getPdo();
 		$connection = new SqlConnection($pdo);
-		$shared_key = \random_bytes(64);
+		$shared_key = \random_bytes(32);
 		$auth = new Authenticator(
 			new PasswordFactor(
 				new PostRequestValidator(Expect::array([

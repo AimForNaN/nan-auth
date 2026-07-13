@@ -44,7 +44,7 @@ readonly class Authenticator implements PsrMiddlewareInterface {
 		PsrServerRequestInterface $request,
 		PsrRequestHandlerInterface $handler,
 	): PsrResponseInterface {
-		$identity = $this->__factor->validateRequest($request);
+		$identity = $this->__factor->validateChallenge($request);
 
 		if ($identity instanceof IdentityInterface) {
 			// @todo Replace with abstract interface implementation!
@@ -77,9 +77,8 @@ readonly class Authenticator implements PsrMiddlewareInterface {
 		$response_factory = ServerRequest::getServiceFromRequest(
 			PsrResponseFactoryInterface::class,
 			$request,
+			ResponseFactory::class,
 		);
-
-		$response_factory ??= new ResponseFactory();
 
 		return $response_factory->createResponse(401);
 	}

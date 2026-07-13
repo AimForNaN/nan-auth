@@ -12,6 +12,8 @@ class SqlUser implements IdentityInterface {
 		EntityTrait::fromArray insteadof IdentityTrait;
 	}
 
+	private(set) string $id;
+
 	public ?string $display_name;
 
 	public Identifiers $identifiers;

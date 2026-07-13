@@ -7,7 +7,7 @@ use NaN\Authentication\Interfaces\IdentityRefInterface;
 use NaN\Database\Interfaces\EntityInterface;
 
 interface IdentifierInterface extends EntityInterface, IdentityRefInterface {
-	public IdentifierType $type { get; }
+	public string $type { get; }
 
 	public mixed $value { get; }
 

@@ -10,4 +10,6 @@ class Credential implements Interfaces\CredentialInterface {
 	use CredentialTrait, EntityTrait, IdentityRefTrait {
 		EntityTrait::fromArray insteadof CredentialTrait;
 	}
+
+	private(set) string $id;
 }

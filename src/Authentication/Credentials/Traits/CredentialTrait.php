@@ -9,7 +9,11 @@ use NaN\Authentication\CredentialType;
  * @implements CredentialInterface
  */
 trait CredentialTrait {
-	private(set) CredentialType $type;
+	private(set) string $type {
+		set(string $value) {
+			$this->type = CredentialType::from($value)->value;
+		}
+	}
 
 	private(set) string $value;
 

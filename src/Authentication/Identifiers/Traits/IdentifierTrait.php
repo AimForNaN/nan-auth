@@ -9,13 +9,11 @@ use NaN\Authentication\IdentifierType;
  * @implements IdentifierInterface
  */
 trait IdentifierTrait {
-	public string $id {
-		get {
-			return $this->value;
+	private(set) string $type {
+		set(string $value) {
+			$this->type = IdentifierType::from($value)->value;
 		}
 	}
-
-	private(set) IdentifierType $type;
 
 	private(set) mixed $value;
 

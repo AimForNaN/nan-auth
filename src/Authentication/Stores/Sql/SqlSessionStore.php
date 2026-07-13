@@ -58,7 +58,7 @@ readonly class SqlSessionStore implements StoreInterface {
 		$select_statement = $query->pull();
 
 		$select_statement
-			->select()
+			->select(['*'])
 			->where(function (WhereClause $where) use ($data) {
 				$where
 					->is('token', '=', $data['token'])
