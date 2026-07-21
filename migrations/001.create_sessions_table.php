@@ -14,7 +14,7 @@ return new class extends Migration {
 	public function up(): void {
 		Capsule::schema()->create('sessions', function (Blueprint $table) {
 			$table->dateTime('expires');
-			$table->string('identity');
+			$table->uuid('identity');
 			$table->string('token')->primary();
 
 			$table->foreign('identity')->references('id')->on('users');

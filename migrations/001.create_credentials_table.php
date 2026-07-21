@@ -13,7 +13,7 @@ return new class extends Migration {
 
 	public function up(): void {
 		Capsule::schema()->create('credentials', function (Blueprint $table) {
-			$table->string('identity');
+			$table->uuid('identity');
 			$table->string('type');
 			$table->string('value');
 			$table->dateTime('expires')->nullable();
