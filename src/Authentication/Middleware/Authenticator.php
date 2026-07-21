@@ -2,29 +2,25 @@
 
 namespace NaN\Authentication\Middleware;
 
-use NaN\Authentication\Factors\Interfaces\FactorInterface;
-use NaN\Authentication\Identities\Interfaces\IdentityInterface;
-use NaN\Authentication\Stores\Interfaces\StoreInterface;
 use NaN\Authentication\Codecs\Interfaces\CodecInterface;
+use NaN\Authentication\Identities\Interfaces\IdentityInterface;
+use NaN\Authentication\Middleware\Factors\Traits\MiddlewareTrait;
+use NaN\Authentication\Stores\Interfaces\StoreInterface;
 use NaN\Http\{
 	ResponseFactory,
-	ServerRequest,
-};
+	ServerRequest,};
 use Psr\Http\Message\{
 	ResponseFactoryInterface as PsrResponseFactoryInterface,
 	ResponseInterface as PsrResponseInterface,
-	ServerRequestInterface as PsrServerRequestInterface,
-};
+	ServerRequestInterface as PsrServerRequestInterface,};
 use Psr\Http\Server\{
 	MiddlewareInterface as PsrMiddlewareInterface,
-	RequestHandlerInterface as PsrRequestHandlerInterface,
-};
+	RequestHandlerInterface as PsrRequestHandlerInterface,};
 
 readonly class Authenticator implements PsrMiddlewareInterface {
 	private \DateTimeInterface $__cookie_expiration;
 
 	public function __construct(
-		private FactorInterface $__factor,
 		private StoreInterface $__session_store,
 		private CodecInterface $__codec,
 		private string $__cookie_name = 'session_token',
@@ -38,6 +34,8 @@ readonly class Authenticator implements PsrMiddlewareInterface {
 	}
 
 	/**
+	 * Handles validateChallenge of the factor!
+	 *
 	 * @throws \Random\RandomException
 	 */
 	public function process(

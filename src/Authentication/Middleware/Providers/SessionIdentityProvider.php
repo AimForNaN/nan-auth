@@ -1,10 +1,13 @@
 <?php
 
-namespace NaN\Authentication\Middleware;
+namespace NaN\Authentication\Middleware\Providers;
 
 use NaN\Authentication\Codecs\Interfaces\CodecInterface;
 use NaN\Authentication\Identities\Interfaces\IdentityInterface;
-use NaN\Authentication\Sessions\Interfaces\SessionInterface;
+use NaN\Authentication\Sessions\{
+	Interfaces\SessionInterface,
+	Traits\AssertSessionTrait,
+};
 use NaN\Authentication\Stores\Interfaces\StoreInterface;
 use NaN\Http\RequestValidators\Interfaces\RequestValidatorInterface;
 use Psr\Http\{
@@ -14,7 +17,9 @@ use Psr\Http\{
 	Server\RequestHandlerInterface as PsrRequestHandlerInterface,
 };
 
-readonly class IdentityProvider implements PsrMiddlewareInterface {
+readonly class SessionIdentityProvider implements PsrMiddlewareInterface {
+	use AssertSessionTrait;
+
 	public function __construct(
 		private RequestValidatorInterface $__request_validator,
 		private StoreInterface $__identity_store,
@@ -32,7 +37,7 @@ readonly class IdentityProvider implements PsrMiddlewareInterface {
 			/** @var SessionInterface|null $session_cookie */
 			$session_cookie = \array_find($data, fn($x) => $x instanceof SessionInterface);
 
-			assert($session_cookie instanceof SessionInterface);
+			$this->__assertSession($session_cookie);
 
 			$decoded_token = $this->__codec->decode($session_cookie->token);
 			/** @var SessionInterface|null $session */
@@ -40,7 +45,7 @@ readonly class IdentityProvider implements PsrMiddlewareInterface {
 				'token' => $decoded_token,
 			]);
 
-			assert($session instanceof SessionInterface);
+			$this->__assertSession($session);
 
 			/** @var IdentityInterface|null $user */
 			$user = $this->__identity_store->pull([

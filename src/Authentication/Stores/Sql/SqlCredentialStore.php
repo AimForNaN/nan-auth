@@ -2,7 +2,7 @@
 
 namespace NaN\Authentication\Stores\Sql;
 
-use NaN\Authentication\Credentials;
+use NaN\Authentication\CredentialsCollection;
 use NaN\Authentication\Credentials\Credential;
 use NaN\Authentication\Stores\Interfaces\StoreInterface;
 use NaN\Database\Sql\Query\Statements\Clauses\WhereClause;
@@ -27,7 +27,7 @@ readonly class SqlCredentialStore implements StoreInterface {
 		return false;
 	}
 
-	public function pull(array $data): Credentials {
+	public function pull(array $data): CredentialsCollection {
 		$query = $this->__connection->queryBuilder();
 		/** @var SelectStatement $select_statement */
 		$select_statement = $query->pull();
@@ -51,16 +51,16 @@ readonly class SqlCredentialStore implements StoreInterface {
 				$credentials[] = $credential;
 			}
 
-			return new Credentials(...$credentials);
+			return new CredentialsCollection(...$credentials);
 		}
 
-		return new Credentials();
+		return new CredentialsCollection();
 	}
 
 	/**
 	 * @param array $data Expects an array with keys 'identity', 'type', and 'value'.
 	 */
-	public function push(array $data): Credentials {
+	public function push(array $data): CredentialsCollection {
 		$query = $this->__connection->queryBuilder();
 		/** @var InsertStatement $insert_statement */
 		$insert_statement = $query->push();
@@ -74,7 +74,7 @@ readonly class SqlCredentialStore implements StoreInterface {
 			return $this->pull($data);
 		}
 
-		return new Credentials();
+		return new CredentialsCollection();
 	}
 
 	public function purge(array $data): bool {

@@ -2,22 +2,23 @@
 
 namespace NaN\Authentication\Middleware;
 
-use NaN\Authentication\Factors\Interfaces\FactorInterface;
+use NaN\Authentication\Middleware\Factors\Traits\MiddlewareTrait;
 use Psr\Http\Message\{
 	ResponseInterface as PsrResponseInterface,
-	ServerRequestInterface as PsrServerRequestInterface,
-};
+	ServerRequestInterface as PsrServerRequestInterface,};
 use Psr\Http\Server\{
 	MiddlewareInterface as PsrMiddlewareInterface,
-	RequestHandlerInterface as PsrRequestHandlerInterface,
-};
+	RequestHandlerInterface as PsrRequestHandlerInterface,};
 
 class Challenger implements PsrMiddlewareInterface {
 	public function __construct(
-		private FactorInterface $__factor,
+		private MiddlewareTrait $__factor,
 	) {
 	}
 
+	/**
+	 * Handles generateChallenge of the factor!
+	 */
 	public function process(
 		PsrServerRequestInterface $request,
 		PsrRequestHandlerInterface $handler,
