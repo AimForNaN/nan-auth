@@ -6,8 +6,12 @@ use NaN\Authentication\Credentials\Interfaces\CredentialInterface;
 use NaN\Authentication\Identifiers\Interfaces\IdentifierInterface;
 use NaN\Authentication\Identities\Interfaces\IdentityInterface;
 use NaN\Authentication\Stores\Interfaces\StoreInterface;
-use NaN\Http\ServerRequest;
+use NaN\Http\{
+	ResponseFactory,
+	ServerRequest,
+};
 use Psr\Http\Message\{
+	ResponseFactoryInterface as PsrResponseFactoryInterface,
 	ResponseInterface as PsrResponseInterface,
 	ServerRequestInterface as PsrServerRequestInterface,
 };
@@ -35,28 +39,58 @@ readonly class Registrar implements PsrMiddlewareInterface {
 		PsrServerRequestInterface $request,
 		PsrRequestHandlerInterface $handler,
 	): PsrResponseInterface {
+		/** @var PsrResponseFactoryInterface $response_factory */
+		$response_factory = ServerRequest::getServiceFromRequest(
+			PsrResponseFactoryInterface::class,
+			$request,
+			ResponseFactory::class,
+		);
 		/** @var IdentifierInterface|null $identifier */
 		$identifier = ServerRequest::getServiceFromRequest(
 			IdentifierInterface::class,
 			$request,
 		);
+
+		// Require identifier!
+		if (empty($identifier)) {
+			return $response_factory->createResponse(400, 'Identifier required!');
+		}
+
+		// Identity must not already exist!
+		if (!empty($identifier->identity)) {
+			return $response_factory->createResponse(401);
+		}
+
+		/** @var IdentityInterface|null $identity */
+		$identity = $this->__identity_store->push();
+
+		// Make sure identity was registered before proceeding!
+		if (empty($identity)) {
+			return $response_factory->createResponse(500);
+		}
+
+		/** @var IdentifierInterface|null $identifier */
+		$identifier = $identifier->withIdentity($identity->id);
+
+		// Register identifier!
+		$this->__identifier_store->push((array)$identifier);
+
 		/** @var CredentialInterface|null $credential */
 		$credential = ServerRequest::getServiceFromRequest(
 			CredentialInterface::class,
 			$request,
 		);
-		/** @var IdentityInterface|null $identity */
-		$identity = $identifier->identity;
 
-		if (empty($identity)) {
-			$identity = $this->__identity_store->push();
-			$identifier = $identifier->withIdentity($identity->id);
+		// Do not require credential! Register credential only if one is provided!
+		if ($credential instanceof CredentialInterface) {
 			$credential = $credential->withIdentity($identity->id);
-
-			$this->__identifier_store->push((array)$identifier);
 			$this->__credential_store->push((array)$credential);
 		}
 
-		return $handler->handle($request);
+		// Pass identity for anyone interested!
+		return $handler->handle($request->withAttribute(
+			IdentityInterface::class,
+			$identity,
+		));
 	}
 }

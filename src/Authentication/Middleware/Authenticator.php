@@ -4,18 +4,20 @@ namespace NaN\Authentication\Middleware;
 
 use NaN\Authentication\Codecs\Interfaces\CodecInterface;
 use NaN\Authentication\Identities\Interfaces\IdentityInterface;
-use NaN\Authentication\Middleware\Factors\Traits\MiddlewareTrait;
 use NaN\Authentication\Stores\Interfaces\StoreInterface;
 use NaN\Http\{
 	ResponseFactory,
-	ServerRequest,};
+	ServerRequest,
+};
 use Psr\Http\Message\{
 	ResponseFactoryInterface as PsrResponseFactoryInterface,
 	ResponseInterface as PsrResponseInterface,
-	ServerRequestInterface as PsrServerRequestInterface,};
+	ServerRequestInterface as PsrServerRequestInterface,
+};
 use Psr\Http\Server\{
 	MiddlewareInterface as PsrMiddlewareInterface,
-	RequestHandlerInterface as PsrRequestHandlerInterface,};
+	RequestHandlerInterface as PsrRequestHandlerInterface,
+};
 
 readonly class Authenticator implements PsrMiddlewareInterface {
 	private \DateTimeInterface $__cookie_expiration;
@@ -42,42 +44,46 @@ readonly class Authenticator implements PsrMiddlewareInterface {
 		PsrServerRequestInterface $request,
 		PsrRequestHandlerInterface $handler,
 	): PsrResponseInterface {
-		$identity = $this->__factor->validateChallenge($request);
-
-		if ($identity instanceof IdentityInterface) {
-			// @todo Replace with abstract interface implementation!
-			$token = \bin2hex(\random_bytes(64));
-
-			$this->__session_store->push([
-				'expires' => $this->__cookie_expiration->format(\DateTimeInterface::ATOM),
-				'identity' => $identity->id,
-				'token' => $token,
-			]);
-
-			$token = $this->__codec->encode($token);
-
-			// @todo Maybe manually set response set-cookie headers!
-			setcookie(
-				$this->__cookie_name,
-				$token,
-				[
-					'expires' => $this->__cookie_expiration->getTimestamp(),
-					'samesite' => 'Lax',
-					'secure' => true,
-					'httponly' => true,
-				],
-			);
-
-			return $handler->handle($request);
-		}
-
 		/** @var PsrResponseFactoryInterface $response_factory */
 		$response_factory = ServerRequest::getServiceFromRequest(
 			PsrResponseFactoryInterface::class,
 			$request,
 			ResponseFactory::class,
 		);
+		/** @var IdentityInterface|null $identity */
+		$identity = ServerRequest::getServiceFromRequest(
+			IdentityInterface::class,
+			$request,
+		);
 
-		return $response_factory->createResponse(401);
+		// Require identity!
+		if (!\is_a($identity, IdentityInterface::class)) {
+			return $response_factory->createResponse(401);
+		}
+
+		// @todo Replace with abstract interface implementation!
+		$token = \bin2hex(\random_bytes(64));
+
+		$this->__session_store->push([
+			'expires' => $this->__cookie_expiration->format(\DateTimeInterface::ATOM),
+			'identity' => $identity->id,
+			'token' => $token,
+		]);
+
+		$token = $this->__codec->encode($token);
+
+		// @todo Maybe manually set response set-cookie headers!
+		setcookie(
+			$this->__cookie_name,
+			$token,
+			[
+				'expires' => $this->__cookie_expiration->getTimestamp(),
+				'samesite' => 'Lax',
+				'secure' => true,
+				'httponly' => true,
+			],
+		);
+
+		return $handler->handle($request);
 	}
 }
