@@ -7,14 +7,13 @@ use NaN\Authentication\Credentials\Interfaces\CredentialInterface;
 use NaN\Authentication\CredentialType;
 use NaN\Authentication\Hashers\Interfaces\HasherInterface;
 use NaN\Authentication\Identifiers\Interfaces\IdentifierInterface;
-use NaN\Authentication\Identities\Interfaces\IdentityInterface;
 use NaN\Authentication\Stores\Interfaces\StoreInterface;
 use NaN\Http\{
 	ResponseFactory,
 	ServerRequest,
 };
 use Psr\Http\{
-	Message\ResponseFactoryInterface,
+	Message\ResponseFactoryInterface as PsrResponseFactoryInterface,
 	Message\ResponseInterface as PsrResponseInterface,
 	Message\ServerRequestInterface as PsrServerRequestInterface,
 	Server\MiddlewareInterface as PsrMiddlewareInterface,
@@ -23,7 +22,6 @@ use Psr\Http\{
 
 readonly class PasswordValidator implements PsrMiddlewareInterface {
 	public function __construct(
-		private StoreInterface $__identity_store,
 		private StoreInterface $__credentials_store,
 		private HasherInterface $__hasher,
 	) {
@@ -58,23 +56,13 @@ readonly class PasswordValidator implements PsrMiddlewareInterface {
 					$credential_form_store->value,
 				)
 			) {
-				/** @var IdentityInterface|null $identity */
-				$identity = $this->__identity_store->pull([
-					'id' => $identifier->identity,
-				]);
-
-				return $handler->handle(
-					$request->withAttribute(
-						IdentityInterface::class,
-						$identity,
-					),
-				);
+				return $handler->handle($request);
 			}
 		}
 
-		/** @var ResponseFactoryInterface $response_factory */
+		/** @var PsrResponseFactoryInterface $response_factory */
 		$response_factory = ServerRequest::getServiceFromRequest(
-			ResponseFactoryInterface::class,
+			PsrResponseFactoryInterface::class,
 			$request,
 			ResponseFactory::class,
 		);

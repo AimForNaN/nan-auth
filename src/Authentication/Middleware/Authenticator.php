@@ -58,7 +58,7 @@ readonly class Authenticator implements PsrMiddlewareInterface {
 
 		// Require identity!
 		if (!\is_a($identity, IdentityInterface::class)) {
-			return $response_factory->createResponse(401);
+			return $response_factory->createResponse(401, 'Authentication failed!');
 		}
 
 		// @todo Replace with abstract interface implementation!

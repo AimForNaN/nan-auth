@@ -66,7 +66,7 @@ readonly class Registrar implements PsrMiddlewareInterface {
 
 		// Make sure identity was registered before proceeding!
 		if (empty($identity)) {
-			return $response_factory->createResponse(500);
+			return $response_factory->createResponse(500, 'Failed to register identity!');
 		}
 
 		/** @var IdentifierInterface|null $identifier */
