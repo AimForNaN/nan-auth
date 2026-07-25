@@ -2,18 +2,38 @@
 
 namespace NaN\Authentication\Stores;
 
-class RedisStore implements Interfaces\StoreInterface {
-	public function patch(array $data): bool {
-		return false;
+use Psr\SimpleCache\CacheInterface as PsrCacheInterface;
+
+class RedisStore implements PsrCacheInterface {
+	public function get(string $key, mixed $default = null): mixed {
+		// TODO: Implement get() method.
 	}
 
-	public function pull(array $data): mixed {
+	public function set(string $key, mixed $value, \DateInterval|int|null $ttl = null): bool {
+		// TODO: Implement set() method.
 	}
 
-	public function push(array $data): mixed {
+	public function delete(string $key): bool {
+		// TODO: Implement delete() method.
 	}
 
-	public function purge(array $data): bool {
-		return false;
+	public function clear(): bool {
+		// TODO: Implement clear() method.
+	}
+
+	public function getMultiple(iterable $keys, mixed $default = null): iterable {
+		// TODO: Implement getMultiple() method.
+	}
+
+	public function setMultiple(iterable $values, \DateInterval|int|null $ttl = null): bool {
+		// TODO: Implement setMultiple() method.
+	}
+
+	public function deleteMultiple(iterable $keys): bool {
+		// TODO: Implement deleteMultiple() method.
+	}
+
+	public function has(string $key): bool {
+		// TODO: Implement has() method.
 	}
 }
