@@ -27,7 +27,8 @@
 		"psr/http-server-middleware": "^1.0",
 		"psr/http-server-handler": "^1.0",
 		"ramsey/uuid": "^4.9",
-		"spomky-labs/otphp": "^11.5"
+		"spomky-labs/otphp": "^11.5",
+		"predis/predis": "^3.5"
 	},
 	"require-dev": {
 		"illuminate/database": "^12.64",
