@@ -10,7 +10,8 @@ use NaN\Authentication\IdentifierType;
  */
 trait IdentifierTrait {
 	private(set) string $type {
-		set(string $value) {
+		get => $this->type;
+		set {
 			$this->type = IdentifierType::from($value)->value;
 		}
 	}
@@ -34,7 +35,7 @@ trait IdentifierTrait {
 	public function withType(IdentifierType $type): IdentifierInterface {
 		$clone = clone $this;
 
-		$clone->type = $type;
+		$clone->type = $type->value;
 
 		return $clone;
 	}

@@ -9,7 +9,6 @@ use NaN\Http\{
 	ResponseFactory,
 	ServerRequest,
 };
-use NaN\Http\RequestValidators\Interfaces\RequestValidatorInterface;
 use Psr\Http\{
 	Message\ResponseFactoryInterface as PsrResponseFactoryInterface,
 	Message\ResponseInterface as PsrResponseInterface,
@@ -26,7 +25,6 @@ readonly class IdentifierProvider implements PsrMiddlewareInterface {
 	use MiddlewareTrait;
 
 	public function __construct(
-		private RequestValidatorInterface $__request_validator,
 		private StoreInterface $__identifier_store,
 	) {
 	}
@@ -35,10 +33,8 @@ readonly class IdentifierProvider implements PsrMiddlewareInterface {
 		PsrServerRequestInterface $request,
 		PsrRequestHandlerInterface $handler,
 	): PsrResponseInterface {
-		/** @var array|null $result */
-		$result = $this->__request_validator->validateRequest($request);
 		/** @var IdentifierInterface|null $identifier */
-		$identifier = $this->__getIdentifier($result);
+		$identifier = $this->__getIdentifier($request);
 
 		if (empty($identifier)) {
 			/** @var PsrResponseFactoryInterface $response_factory */

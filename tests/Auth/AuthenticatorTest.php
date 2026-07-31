@@ -32,10 +32,10 @@ describe('Authenticator', function () {
 		$connection = new SqlConnection($pdo);
 		$shared_key = \random_bytes(32);
 		$middleware = new MiddlewareCollection(
+			new PostRequestValidator(Expect::array([
+				'identifier' => new IdentifierSchema(Identifier::class, IdentifierType::Email),
+			])),
 			new IdentifierProvider(
-				new PostRequestValidator(Expect::array([
-					'identifier' => new IdentifierSchema(Identifier::class, IdentifierType::Email),
-				])),
 				new SqlIdentifierStore($connection),
 			),
 			new CredentialProvider(
@@ -73,10 +73,10 @@ describe('Authenticator', function () {
 		$connection = new SqlConnection($pdo);
 		$shared_key = \random_bytes(32);
 		$middleware = new MiddlewareCollection(
+			new PostRequestValidator(Expect::array([
+				'identifier' => new IdentifierSchema(Identifier::class, IdentifierType::Email),
+			])),
 			new IdentifierProvider(
-				new PostRequestValidator(Expect::array([
-					'identifier' => new IdentifierSchema(Identifier::class, IdentifierType::Email),
-				])),
 				new SqlIdentifierStore($connection),
 			),
 			new CredentialProvider(

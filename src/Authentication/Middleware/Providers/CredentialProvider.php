@@ -4,7 +4,6 @@ namespace NaN\Authentication\Middleware\Providers;
 
 use NaN\Authentication\Credentials\Interfaces\CredentialInterface;
 use NaN\Authentication\Middleware\Traits\MiddlewareTrait;
-use NaN\Http\RequestValidators\Interfaces\RequestValidatorInterface;
 use NaN\Http\{
 	ResponseFactory,
 	ServerRequest,
@@ -23,19 +22,12 @@ use Psr\Http\{
 readonly class CredentialProvider implements PsrMiddlewareInterface {
 	use MiddlewareTrait;
 
-	public function __construct(
-		private RequestValidatorInterface $__request_validator,
-	) {
-	}
-
 	public function process(
 		PsrServerRequestInterface $request,
 		PsrRequestHandlerInterface $handler,
 	): PsrResponseInterface {
-		/** @var array|null $result */
-		$result = $this->__request_validator->validateRequest($request);
 		/** @var CredentialInterface|null $credential */
-		$credential = $this->__getCredential($result);
+		$credential = $this->__getCredential($request);
 
 		if (empty($credential)) {
 			/** @var PsrResponseFactoryInterface $response_factory */

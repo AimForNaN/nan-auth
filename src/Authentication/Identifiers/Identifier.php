@@ -18,6 +18,5 @@ class Identifier implements IdentifierInterface {
 			return $this->value;
 		}
 	}
-
 	private(set) bool $verified = false;
 }
