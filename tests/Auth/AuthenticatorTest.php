@@ -33,16 +33,13 @@ describe('Authenticator', function () {
 		$shared_key = \random_bytes(32);
 		$middleware = new MiddlewareCollection(
 			new PostRequestValidator(Expect::array([
+				'credential' => new CredentialSchema(Credential::class, CredentialType::Password),
 				'identifier' => new IdentifierSchema(Identifier::class, IdentifierType::Email),
 			])),
 			new IdentifierProvider(
 				new SqlIdentifierStore($connection),
 			),
-			new CredentialProvider(
-				new PostRequestValidator(Expect::array([
-					'credential' => new CredentialSchema(Credential::class, CredentialType::Password),
-				])),
-			),
+			new CredentialProvider(),
 			new OtpValidator(
 				new RedisCache(new \Predis\Client()),
 			),
