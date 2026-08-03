@@ -51,10 +51,7 @@ readonly class Authenticator implements PsrMiddlewareInterface {
 			ResponseFactory::class,
 		);
 		/** @var IdentityInterface|null $identity */
-		$identity = ServerRequest::getServiceFromRequest(
-			IdentityInterface::class,
-			$request,
-		);
+		$identity = $request->getAttribute(IdentityInterface::class);
 
 		// Require identity!
 		if (!\is_a($identity, IdentityInterface::class)) {

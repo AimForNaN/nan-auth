@@ -16,7 +16,6 @@ use Psr\Http\{
 readonly class IdentityFromIdentifierProvider implements PsrMiddlewareInterface {
 	public function __construct(
 		private StoreInterface $__identity_store,
-		private StoreInterface $__identifier_store,
 	) {
 	}
 
@@ -27,10 +26,7 @@ readonly class IdentityFromIdentifierProvider implements PsrMiddlewareInterface 
 		/** @var IdentityInterface|null $identity */
 		$identity = null;
 		/** @var IdentifierInterface|null $identifier */
-		$identifier = ServerRequest::getServiceFromRequest(
-			IdentifierInterface::class,
-			$request,
-		);
+		$identifier = $request->getAttribute(IdentifierInterface::class);
 
 		if (\is_a($identifier, IdentifierInterface::class)) {
 			if (!empty($identifier->identity)) {

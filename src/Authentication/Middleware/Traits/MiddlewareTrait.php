@@ -22,7 +22,7 @@ trait MiddlewareTrait {
 	): array {
 		return match ($request->getMethod()) {
 			'GET' => $request->getQueryParams(),
-			'POST' => $request->getParsedBody(),
+			'POST', 'PUT' => $request->getParsedBody(),
 			default => [],
 		};
 	}

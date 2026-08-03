@@ -35,15 +35,9 @@ readonly class OtpValidator implements PsrMiddlewareInterface {
 			ResponseFactory::class,
 		);
 		/** @var IdentifierInterface|null $identifier */
-		$identifier = ServerRequest::getServiceFromRequest(
-			IdentifierInterface::class,
-			$request,
-		);
+		$identifier = $request->getAttribute(IdentifierInterface::class);
 		/** @var CredentialInterface|null $otp */
-		$otp = ServerRequest::getServiceFromRequest(
-			CredentialInterface::class,
-			$request,
-		);
+		$otp = $request->getAttribute(CredentialInterface::class);
 
 		if (empty($identifier)) {
 			return $response_factory->createResponse(401);

@@ -10,14 +10,12 @@ use NaN\Http\{
 	ResponseFactory,
 	ServerRequest,
 };
-use Psr\Http\Message\{
-	ResponseFactoryInterface as PsrResponseFactoryInterface,
-	ResponseInterface as PsrResponseInterface,
-	ServerRequestInterface as PsrServerRequestInterface,
-};
-use Psr\Http\Server\{
-	MiddlewareInterface as PsrMiddlewareInterface,
-	RequestHandlerInterface as PsrRequestHandlerInterface,
+use Psr\Http\{
+	Message\ResponseFactoryInterface as PsrResponseFactoryInterface,
+	Message\ResponseInterface as PsrResponseInterface,
+	Message\ServerRequestInterface as PsrServerRequestInterface,
+	Server\MiddlewareInterface as PsrMiddlewareInterface,
+	Server\RequestHandlerInterface as PsrRequestHandlerInterface,
 };
 
 /**
@@ -46,10 +44,7 @@ readonly class Registrar implements PsrMiddlewareInterface {
 			ResponseFactory::class,
 		);
 		/** @var IdentifierInterface|null $identifier */
-		$identifier = ServerRequest::getServiceFromRequest(
-			IdentifierInterface::class,
-			$request,
-		);
+		$identifier = $request->getAttribute(IdentifierInterface::class);
 
 		// Require identifier!
 		if (empty($identifier)) {
@@ -76,10 +71,7 @@ readonly class Registrar implements PsrMiddlewareInterface {
 		$this->__identifier_store->push((array)$identifier);
 
 		/** @var CredentialInterface|null $credential */
-		$credential = ServerRequest::getServiceFromRequest(
-			CredentialInterface::class,
-			$request,
-		);
+		$credential = $request->getAttribute(CredentialInterface::class);
 
 		// Do not require credential! Register credential only if one is provided!
 		if ($credential instanceof CredentialInterface) {

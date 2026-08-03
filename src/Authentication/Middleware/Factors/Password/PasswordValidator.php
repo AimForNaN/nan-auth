@@ -32,15 +32,9 @@ readonly class PasswordValidator implements PsrMiddlewareInterface {
 		PsrRequestHandlerInterface $handler,
 	): PsrResponseInterface {
 		/** @var IdentifierInterface|null $identifier */
-		$identifier = ServerRequest::getServiceFromRequest(
-			IdentifierInterface::class,
-			$request,
-		);
+		$identifier = $request->getAttribute(IdentifierInterface::class);
 		/** @var CredentialInterface|null $credential */
-		$credential = ServerRequest::getServiceFromRequest(
-			CredentialInterface::class,
-			$request,
-		);
+		$credential = $request->getAttribute(CredentialInterface::class);
 		/** @var CredentialsCollection $credentials */
 		$credentials_from_store = $this->__credentials_store->pull([
 			'identity' => $identifier->identity,

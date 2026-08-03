@@ -38,10 +38,7 @@ readonly class OtpChallenger implements PsrMiddlewareInterface{
 			ResponseFactory::class,
 		);
 		/** @var IdentifierInterface|null $identifier */
-		$identifier = ServerRequest::getServiceFromRequest(
-			IdentifierInterface::class,
-			$request,
-		);
+		$identifier = $request->getAttribute(IdentifierInterface::class);
 
 		if (empty($identifier)) {
 			return $response_factory->createResponse(400, 'Identifier required!');
@@ -59,7 +56,9 @@ readonly class OtpChallenger implements PsrMiddlewareInterface{
 			return $response_factory->createResponse(500);
 		}
 
-		$this->__sender($totp->now());
+		$sender = $this->__sender;
+		// @todo Maybe have it return a boolean!
+		$sender($totp->now());
 
 		return $handler->handle($request);
 	}
